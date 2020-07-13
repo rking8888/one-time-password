@@ -5,39 +5,140 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha384-YkYpnhy3j3+zc3fQvzlbh4WGwDgt+06gsGsaApwM1O3IKIsKJk61C0Lr6YvbovUV" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/pbkdf2.js" integrity="sha384-3TpUaoUrOhYmfB7OZ8ul4rKMr/NQRp2wiO+NtwbnXVaGIY/kv3Inu846n0P+AKwU" crossorigin="anonymous"></script>
         <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" integrity="sha384-xewr6kSkq3dBbEtB6Z/3oFZmknWn7nHqhLVLrYgzEFRbU/DHSxW7K3B44yWUN60D" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <!--<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>-->
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+        <style>
+            /* Style the body */
+            body {
+                text-align:center;
+                margin: 5em;
+            }
+
+            h2 {
+                color: darkgrey;
+                margin-bottom: 2em;
+            }
+
+            textarea {
+                border-radius: 0.5em;
+                width: 100%;
+            }
+
+            form {
+                width: 50%;
+                margin: auto;
+            }
+
+            .note {
+                color: slategrey;
+                font-size: 1em;
+            }
+
+            /* Style the tab */
+            .tab {
+            overflow: hidden;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            }
+
+            /* Style the buttons that are used to open the tab content */
+            .tab button {
+            background-color: inherit;
+            float: left;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 16px;
+            transition: 0.3s;
+            }
+
+            /* Change background color of buttons on hover */
+            .tab button:hover {
+            background-color: #ddd;
+            }
+
+            /* Create an active/current tablink class */
+            .tab button.active {
+            background-color: #ccc;
+            }
+
+            /* Style the tab content */
+            .tabcontent {
+            display: none;
+            border: 1px solid #ccc;
+            border-top: none;
+            padding-top: 2em;
+            padding-bottom: 2em;
+            }
+
+            .tabcontent {
+                animation: fadeEffect 1s; /* Fading effect takes 1 second */
+            }
+            
+            /* Go from zero to full opacity */
+            @keyframes fadeEffect {
+                from {opacity: 0;}
+                to {opacity: 1;}
+            }
+        </style>
 
         </head>
         <h1>Secure One-Time Password</h1>
         <h2>Secret Share Site</h2>
-        <form action="#">
-            New secret:<br>
-            <textarea id=newSecret rows=20 cols=100></textarea> <br>
-            Optional passphrase: (will be required for decryption) <input type=text id=newpassphrase><Br>
-            <input type='button' value='Create a new secret' id="newSecretBtn" />            <input type=reset>
 
-        </form>
-        <h2>Retrieve a secret</h2>
-        <form action="#">
-            Enter secret UUID:<br>
-            <input type=text id=getSecret><br>
-            Optional passphrase: (required if one was used for encrypting) <input type=text id=getpassphrase><Br>
-            <input type='button' value='Retrieve a secret' id="getSecretBtn" />
-            <input type=reset>
-        </form>
+        <!-- Tab links -->
+        <div class="tab">
+            <button id="createBtn" class="tablinks" onclick="openTab(event, 'create')">Create a Secret</button>
+            <button id="retrieveBtn" class="tablinks" onclick="openTab(event, 'retrieve')">Retrieve a Secret</button>
+        </div>
+
+        <!-- Tab content -->
+        <div id="create" class="tabcontent">
+            <form action="#">
+                <h4>Enter Secret Here:</h4>
+                <textarea id=newSecret class="form-control" rows=10></textarea> <br><br>
+                Optional passphrase: (will be required for decryption)* <input class="form-control" type=text id=newpassphrase>
+                <br><br>
+                <input type='button' class="btn btn-primary btn-lg btn-block" value='Create a new secret' id="newSecretBtn" />            
+                <input class="btn btn-secondary btn-lg btn-block" type=reset>
+                <br>
+                <div class="note">*If you provide a passphrase when creating a secret, the data will be encrypted with AES-256 in CBC mode in your browser prior to being sent to the server. This is the most secure mode, as the server will never see the passphrase.</div>
+            </form>
+            
+        </div>
+
+         <!-- Tab content -->
+        <div id="retrieve" class="tabcontent">
+            <h4>Retrieve a secret</h4>
+            <br>
+            <form action="#">
+                Enter secret UUID:
+                <input class="form-control" type=text id=getSecret>
+                <br><br>
+                Optional passphrase: (required if one was used for encrypting) <input class="form-control" type=text id=getpassphrase><Br>
+                <br><br>
+                <input type='button' class="btn btn-primary btn-lg btn-block" value='Retrieve a secret' id="getSecretBtn" />
+                <input type=reset class="btn btn-secondary btn-lg btn-block">
+            </form>
+        </div>
+
         <div id=newSecretDialog title="New secret">
-            <div id="newSecretUuid"></div>
+            <div id="newSecretUuid" class="alert alert-success" role="alert"></div>
+            <br>
             <div id="newSecretUrl"></div>
-            <button id="copySecretUrl">Copy URL</button>
+            <button class="btn btn-primary btn-lg btn-block" id="copySecretUrl">Copy URL</button>
             <div>Note: You can only visit the secret URL once, after which the secret is deleted.</div>
         </div>
         <div id=getSecretDialog title="Secret retrieved">
             <div id="newSecretUrl"></div>
-            <div id="secretText"></div>
-            <button id="copySecret">Copy Secret</button>
+            <div id="secretText" class="alert alert-success" role="alert"></div>
+            <br>
+            <button class="btn btn-primary btn-lg btn-block" id="copySecret">Copy Secret</button>
         </div>
-        <h2>Notes</h2>
-        <p>If you provide a passphrase when creating a secret, the data will be encrypted with AES-256 in CBC mode in your browser prior to being sent to the server. This is the most secure mode, as the server will never see the passphrase.</p>
-
+        
         <script language="javascript" type="text/javascript">
             const keySize = 256;
             const ivSize = 128;
@@ -111,7 +212,7 @@
                     const secret = $('#getpassphrase').val() ? 
                             decrypt(data.secret, $('#getpassphrase').val()) : 
                             data.secret;
-                    $('#secretText').html(secret);
+                    $('#secretText').html('Your secret is: '+secret);
                     $('#copySecret').click(function() {
                         copyTextToClipboard(secret);
                         $('#getpassphrase').val('');
@@ -154,6 +255,26 @@
                 });
                 return vars;
             }
+            function openTab(evt, sectionName) {
+                // Declare all variables
+                var i, tabcontent, tablinks;
+
+                // Get all elements with class="tabcontent" and hide them
+                tabcontent = document.getElementsByClassName("tabcontent");
+                for (i = 0; i < tabcontent.length; i++) {
+                    tabcontent[i].style.display = "none";
+                }
+
+                // Get all elements with class="tablinks" and remove the class "active"
+                tablinks = document.getElementsByClassName("tablinks");
+                for (i = 0; i < tablinks.length; i++) {
+                    tablinks[i].className = tablinks[i].className.replace(" active", "");
+                }
+
+                // Show the current tab, and add an "active" class to the button that opened the tab
+                document.getElementById(sectionName).style.display = "block";
+                evt.currentTarget.className += " active";
+            }
             $(document).ready(function () {
                 $("#newSecretDialog").dialog({
                     autoOpen : false, modal : true, show : "blind", hide : "blind", width: 600
@@ -165,7 +286,9 @@
                 if (secret !== undefined) {
                     $('#getSecret').val(secret);
                     window.history.replaceState({}, document.title, window.location.pathname);
-
+                    $("#retrieveBtn").click();
+                } else {
+                    $("#createBtn").click();
                 }
             });
         </script>
